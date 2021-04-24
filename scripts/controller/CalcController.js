@@ -105,7 +105,7 @@ class CalcController{
                 this.addEventListenerAll(btn,"click drag", e=>{
 
                     let textB = (btn.className.replace("btn btn-number col-sm","").replace("btn btn-others col-sm",""));
-                    console.log(textB);
+                    
                     this.execB(textB);
                     
                     
