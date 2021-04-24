@@ -9,8 +9,6 @@ class CalcController{
     }
 
     starting(){
-
-        
         
     }
 
@@ -107,7 +105,7 @@ class CalcController{
                     let textB = (btn.className.replace("btn btn-number col-sm","").replace("btn btn-others col-sm",""));
                     
                     this.execB(textB);
-                    
+                    console.log(textB);
                     
                     
             })
