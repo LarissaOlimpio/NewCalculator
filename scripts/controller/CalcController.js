@@ -44,9 +44,7 @@ class CalcController{
     setError(){
 
         this.display = "ERROR"
-
     }
-
     execB(value){
 
         switch (value ){
