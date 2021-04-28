@@ -11,6 +11,8 @@ class CalcController{
 
     starting(){
         
+
+        
     }
 
     addEventListenerAll(element, events, fun) {
