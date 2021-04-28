@@ -6,6 +6,7 @@ class CalcController{
         this._displayEl = document.querySelector("#display");
         this.starting();
         this.buttonsEvents();
+        
     }
 
     starting(){
