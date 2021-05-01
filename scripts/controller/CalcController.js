@@ -6,13 +6,13 @@ class CalcController{
         this._displayEl = document.querySelector("#display");
         this.starting();
         this.buttonsEvents();
-        
+       
     }
 
     starting(){
         
 
-        
+
     }
 
     addEventListenerAll(element, events, fun) {
@@ -33,12 +33,46 @@ class CalcController{
 
     clearEntry(){
 
-        this._operation.pop();//retirando o último item do array
+       this._operation.pop();//retirando o último item do array
+    }
+
+    getLastItem(){//pegando último item do array
+
+        return this._operation[this._operation.length-1];
+
+    }
+    changeLastItem(value){//mudando o último item do array
+        this._operation[this._operation.length - 1] = value;
+    }
+
+    isOperator(value){
+
+        return (['%','+', '-', '/', '*', '¹/x', 'x²', '√'].indexOf(value)> -1);
     }
 
     addOperation(value){
+        
+        //Verificando se o último item do array é um número
+        if (isNaN(this.getLastItem())){// caso não seja um número:
+        
+            if (this.isOperator(value)){// se for um operador devo trocar o operador 
+                
+                this.changeLastItem(value);
+                
+            }else if (isNaN(value)){//se for um ponto, algo que não seja operador
+                console.log(value);
+            }else{
 
-        this._operation.push(value);//acrescentando item no array
+                this._operation.push(value);//primeira vez que pressionei o número, então preciso mandar para o arraymudar
+
+            }
+
+
+        }else{//se for um número pega o  número e concatena com o próximo número digitado
+            let number = this.getLastItem().toString() + value.toString();
+            this.changeLastItem(parseInt(number));//acrescentando item no array
+        }
+       
         console.log(this._operation);
 
     }
@@ -46,6 +80,7 @@ class CalcController{
 
         this.display = "ERROR"
     }
+    
     execB(value){
 
         switch (value ){
@@ -57,23 +92,32 @@ class CalcController{
                 this.clearEntry();
                 break;
             case '+':
-
+                this.addOperation('+');
                 break;
+
             case '-':
-
+                this.addOperation('-');
                 break;
+
             case '÷':
-
+                this.addOperation('/');
                 break;
+
             case 'X':
-
+                this.addOperation('*');
                 break;
+
             case '%':
-
+                this.addOperation('%');
                 break;
+
             case '=':
-
                 break;
+
+            case ',':
+                this.addOperation(',');
+                break;
+
             case '0':
             case '1':
             case '2':
@@ -87,49 +131,50 @@ class CalcController{
 
                 this.addOperation(parseInt(value));
                 
-                break;
+                    break;
 
             default:
-                this.setError
+                this.setError();
             }
-        console.log(this._operation)
+        
         }
 
+    buttonsEvents(){
 
-        buttonsEvents(){
-
-            let buttons = document.querySelectorAll(".container > .row > button ");
+        let buttons = document.querySelectorAll(".row > button ");
             
             
-            buttons.forEach((btn, index)=> {
+        buttons.forEach((btn, index)=> {
 
-                this.addEventListenerAll(btn,"click drag", e=>{
+            this.addEventListenerAll(btn,"click drag", e=>{
 
-                    let textB = (btn.className.replace("btn btn-number col-sm","").replace("btn btn-others col-sm",""));
-                    
-                    this.execB(textB);
-                    console.log(textB);
+            let textB = (btn.className.replace("btn btn-number col-sm","").replace("btn btn-others col-sm","")).trim();
                     
                     
+            this.execB(textB);
+                    
+                    
+                    
+            
+        })
+
+            this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>{ //mudando aparência do cursor
+                btn.style.cursor = "pointer";
             })
 
-                this.addEventListenerAll(btn, "mouseover mouseup mousedown", e =>{ //mudando aparência do cursor
-                    btn.style.cursor = "pointer";
-                })
+        })
 
-            })
+    }
 
-        }
+    get display(){
 
-        get display(){
+        return this._displayEl.innerHTML;
 
-            return this._displayEl.innerHTML;
+    }
 
-        }
+    set display(value){
 
-        set display(value){
+        this._displayEl.innerHTML = value;
 
-            return this._displayEl.innerHTML = value;
-
-        }
+    }
 }
