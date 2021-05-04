@@ -11,7 +11,7 @@ class CalcController{
 
     starting(){
         
-
+        
 
     }
 
@@ -47,12 +47,44 @@ class CalcController{
 
     isOperator(value){
 
-        return (['%','+', '-', '/', '*', '¹/x', 'x²', '√'].indexOf(value)> -1);
+        return (['%','+', '-', '/', '*', '¹/x', 'x²', '√', '±'].indexOf(value) > -1);
+    }
+    pushOperation(value){//adicionando no array e verificando a quantidade de itens para efeturar a operação
+
+        this._operation.push(value);
+        if (this._operation.length > 3 ){
+
+            this.calculate();
+        }
+
+    }
+    calculate(){//calculando 
+
+        let last = this._operation.pop();
+
+        let result  = eval(this._operation.join(""));
+
+        this._operation = [result, last];
+
     }
 
-    addOperation(value){
+    showTheLastNumber(){
+        
+        let lookingForNumber ;  
+        for(let i = this._operation.length-1; i >= 0; i--){
+        
+            if(!this.isOperator(this._operation[i])){
+
+                lookingForNumber = this._operation[i];
+                break;
+            }
+        }    
+    }
+
+    addOperation(value){//adicionando itens no array verificando se é ou não um número
         
         //Verificando se o último item do array é um número
+       
         if (isNaN(this.getLastItem())){// caso não seja um número:
         
             if (this.isOperator(value)){// se for um operador devo trocar o operador 
@@ -60,21 +92,28 @@ class CalcController{
                 this.changeLastItem(value);
                 
             }else if (isNaN(value)){//se for um ponto, algo que não seja operador
-                console.log(value);
+                console.log('outra coisa',value);
             }else{
 
-                this._operation.push(value);//primeira vez que pressionei o número, então preciso mandar para o arraymudar
-
+                this.pushOperation(value);//primeira vez que pressionei o número, então preciso mandar para o array
             }
 
 
         }else{//se for um número pega o  número e concatena com o próximo número digitado
-            let number = this.getLastItem().toString() + value.toString();
-            this.changeLastItem(parseInt(number));//acrescentando item no array
+            //se for um operador também precisa começar adicionar no array por meio do push
+            if (this.isOperator(value)){
+
+                this.pushOperation(value);
+
+            }else{
+
+                let number = this.getLastItem().toString() + value.toString();
+                this.changeLastItem(parseInt(number));//acrescentando item no array
+                
+                this.showTheLastNumber();
+            }
         }
        
-        console.log(this._operation);
-
     }
     setError(){
 
@@ -111,6 +150,26 @@ class CalcController{
                 this.addOperation('%');
                 break;
 
+            case '√':
+                this.addOperation('√');
+                break;
+                
+            case '¹/x':
+                this.addOperation('¹/x');
+                break;
+
+            case '±':
+                this.addOperation('±');
+                break;
+            
+            case 'x²':
+                this.addOperation('x²');
+                break;
+
+            case '←':
+               
+                break;
+           
             case '=':
                 break;
 
