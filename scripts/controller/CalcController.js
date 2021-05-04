@@ -11,7 +11,7 @@ class CalcController{
 
     starting(){
         
-        
+        this.showTheLastNumber();
 
     }
 
@@ -28,12 +28,14 @@ class CalcController{
     clearAll(){
 
         this._operation = [];//limpando o array
+        this.showTheLastNumber();
 
     }
 
     clearEntry(){
 
        this._operation.pop();//retirando o último item do array
+       this.showTheLastNumber();
     }
 
     getLastItem(){//pegando último item do array
@@ -60,11 +62,26 @@ class CalcController{
     }
     calculate(){//calculando 
 
-        let last = this._operation.pop();
+        let last = '';
+        if(this._operation.length > 3){
+
+            let last = this._operation.pop();
+        }
+        
 
         let result  = eval(this._operation.join(""));
+        if (last == '%'){
 
-        this._operation = [result, last];
+            result /= 100; //variavel recebe ela mesma dividido por 100 neste caso
+            this._operation = [result];
+
+        }else{
+
+            this._operation = [result];
+
+            if (last) this._operation.push(last);
+        }
+        this.showTheLastNumber();
 
     }
 
@@ -78,7 +95,9 @@ class CalcController{
                 lookingForNumber = this._operation[i];
                 break;
             }
-        }    
+        }
+        if (!lookingForNumber)lookingForNumber = 0;
+        this.display = lookingForNumber;    
     }
 
     addOperation(value){//adicionando itens no array verificando se é ou não um número
@@ -96,6 +115,7 @@ class CalcController{
             }else{
 
                 this.pushOperation(value);//primeira vez que pressionei o número, então preciso mandar para o array
+                this.showTheLastNumber();
             }
 
 
@@ -122,7 +142,7 @@ class CalcController{
     
     execB(value){
 
-        switch (value ){
+        switch (value){
 
             case 'C':
                 this.clearAll();
@@ -171,6 +191,7 @@ class CalcController{
                 break;
            
             case '=':
+                this.calculate();
                 break;
 
             case ',':
@@ -211,6 +232,7 @@ class CalcController{
                     
                     
             this.execB(textB);
+            
                     
                     
                     
