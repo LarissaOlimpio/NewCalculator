@@ -2,6 +2,9 @@ class CalcController{
 
     constructor(){
 
+
+        this._lastOp = '';
+        this._lastNum = '';
         this._operation = [];
         this._displayEl = document.querySelector("#display");
         this.starting();
@@ -60,16 +63,32 @@ class CalcController{
         }
 
     }
+    result(){
+
+        return eval(this._operation.join(""));
+
+    }
+
     calculate(){//calculando 
 
         let last = '';
+
+        this._lastOp = this.lookingLastItem();//pegar o último operador
+
         if(this._operation.length > 3){
 
-            let last = this._operation.pop();
-        }
-        
+            last = this._operation.pop();
+            
+            this._lastNum = this.result();//pegar o resultado
+        }else if (this._operation.length ==3){
 
-        let result  = eval(this._operation.join(""));
+            this._lastNum = this.lookingLastItem(false);
+
+        }
+        console.log('_lastOp', this._lastOp );
+        console.log('_lastNum', this._lastNum );
+
+        let result  = this.result();
         if (last == '%'){
 
             result /= 100; //variavel recebe ela mesma dividido por 100 neste caso
@@ -84,18 +103,24 @@ class CalcController{
         this.showTheLastNumber();
 
     }
+    lookingLastItem(isOperator = true){
+
+        let lookingForItem ;  
+        for(let i = this._operation.length-1; i >= 0; i--){
+        
+            if(this.isOperator(this._operation[i])== isOperator){
+
+                lookingForItem = this._operation[i];
+                break;
+            }
+         } 
+        return lookingForItem ;    
+    }
 
     showTheLastNumber(){
         
-        let lookingForNumber ;  
-        for(let i = this._operation.length-1; i >= 0; i--){
+        let lookingForNumber = this.lookingLastItem(false);  
         
-            if(!this.isOperator(this._operation[i])){
-
-                lookingForNumber = this._operation[i];
-                break;
-            }
-        }
         if (!lookingForNumber)lookingForNumber = 0;
         this.display = lookingForNumber;    
     }
