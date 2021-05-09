@@ -3,9 +3,9 @@ class CalcController{
     constructor(){
 
 
-        this._lastOp = '';
-        this._lastNum = '';
-        this._operation = [];
+        this._lastOp = ''; //último operador
+        this._lastNum = '';//último número
+        this._operation = [];//array 
         this._displayEl = document.querySelector("#display");
         this.starting();
         this.buttonsEvents();
@@ -32,13 +32,14 @@ class CalcController{
 
         this._operation = [];//limpando o array
         this.showTheLastNumber();
-
+        
     }
 
     clearEntry(){
 
        this._operation.pop();//retirando o último item do array
        this.showTheLastNumber();
+      
     }
 
     getLastItem(){//pegando último item do array
@@ -75,6 +76,12 @@ class CalcController{
 
         this._lastOp = this.lookingLastItem();//pegar o último operador
 
+        if (this._operation.length < 3){
+
+            let first = this._operation[0];
+            this._operation = [first, this._lastOp, this._lastNum];
+        }
+
         if(this._operation.length > 3){
 
             last = this._operation.pop();
@@ -85,8 +92,8 @@ class CalcController{
             this._lastNum = this.lookingLastItem(false);
 
         }
-        console.log('_lastOp', this._lastOp );
-        console.log('_lastNum', this._lastNum );
+        
+        
 
         let result  = this.result();
         if (last == '%'){
@@ -103,17 +110,24 @@ class CalcController{
         this.showTheLastNumber();
 
     }
-    lookingLastItem(isOperator = true){
+    lookingLastItem(isOperator = true){ 
 
         let lookingForItem ;  
         for(let i = this._operation.length-1; i >= 0; i--){
-        
+            // verificando se o último item do array é operador 
             if(this.isOperator(this._operation[i])== isOperator){
 
                 lookingForItem = this._operation[i];
                 break;
             }
+
          } 
+
+         if (!lookingForItem){//não encontrou ou seja se estiver undefinied
+
+            lookingForItem = (isOperator) ? this._lastOp : this._lastNum;//if ternário 
+         }
+
         return lookingForItem ;    
     }
 
@@ -135,8 +149,6 @@ class CalcController{
                 
                 this.changeLastItem(value);
                 
-            }else if (isNaN(value)){//se for um ponto, algo que não seja operador
-                console.log('outra coisa',value);
             }else{
 
                 this.pushOperation(value);//primeira vez que pressionei o número, então preciso mandar para o array
@@ -153,7 +165,7 @@ class CalcController{
             }else{
 
                 let number = this.getLastItem().toString() + value.toString();
-                this.changeLastItem(parseInt(number));//acrescentando item no array
+                this.changeLastItem(parseFloat(number));//acrescentando item no array
                 
                 this.showTheLastNumber();
             }
@@ -163,6 +175,11 @@ class CalcController{
     setError(){
 
         this.display = "ERROR"
+    }
+    addComma(){//vírgula
+
+        getLastItem();//esse método retorna o último item do arrray 
+
     }
     
     execB(value){
@@ -220,7 +237,7 @@ class CalcController{
                 break;
 
             case ',':
-                this.addOperation(',');
+                this.addComma();
                 break;
 
             case '0':
