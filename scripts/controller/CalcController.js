@@ -9,12 +9,21 @@ class CalcController{
         this._displayEl = document.querySelector("#display");
         this.starting();
         this.buttonsEvents();
+        this.startingTheKeyboard();
+
        
     }
 
     starting(){
         
         this.showTheLastNumber();
+
+    }
+    startingTheKeyboard(){
+
+        document.addEventListener('keyup', e=>{
+            console.log(e);
+        });
 
     }
 
@@ -31,6 +40,8 @@ class CalcController{
     clearAll(){
 
         this._operation = [];//limpando o array
+        this._lastOp = '';
+        this._lastNum = '';
         this.showTheLastNumber();
         
     }
@@ -39,6 +50,7 @@ class CalcController{
 
        this._operation.pop();//retirando o último item do array
        this.showTheLastNumber();
+       
       
     }
 
@@ -67,6 +79,7 @@ class CalcController{
     result(){
 
         return eval(this._operation.join(""));
+        
 
     }
 
@@ -92,8 +105,6 @@ class CalcController{
             this._lastNum = this.lookingLastItem(false);
 
         }
-        
-        
 
         let result  = this.result();
         if (last == '%'){
@@ -108,6 +119,7 @@ class CalcController{
             if (last) this._operation.push(last);
         }
         this.showTheLastNumber();
+        console.log(this._operation);
 
     }
     lookingLastItem(isOperator = true){ 
@@ -165,7 +177,7 @@ class CalcController{
             }else{
 
                 let number = this.getLastItem().toString() + value.toString();
-                this.changeLastItem(parseFloat(number));//acrescentando item no array
+                this.changeLastItem(number);//acrescentando item no array
                 
                 this.showTheLastNumber();
             }
@@ -178,8 +190,20 @@ class CalcController{
     }
     addComma(){//vírgula
 
-        getLastItem();//esse método retorna o último item do arrray 
+        let lOperator = this.getLastItem();//esse método retorna o último item do array 
+        //verifica se é um texto e se tem um ponto ja digitado.
+        if (typeof lOperator === 'string'&& lOperator.split('').indexOf('.') > -1)return;
 
+        if (this.isOperator(lOperator) || !lOperator){
+
+            this.pushOperation('0.');
+
+        }else{
+            this.changeLastItem(lOperator.toString()+'.');
+    
+        }
+        this.showTheLastNumber();
+       
     }
     
     execB(value){
