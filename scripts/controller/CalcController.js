@@ -22,8 +22,59 @@ class CalcController{
     startingTheKeyboard(){
 
         document.addEventListener('keyup', e=>{
-            console.log(e);
+            console.log(e.key);
+             //e =  evento /key = propriedade que retorna o valor digitado
+            switch (e.key){
+
+                case 'Escape':
+                    this.clearAll();
+                    break;
+                case 'Space':
+                    this.clearEntry();
+                    break;
+                case '+':
+    
+                case '-':
+    
+                case '/':
+    
+                case '*':
+    
+                case '%':
+                    this.addOperation(e.key);
+                    break;
+               
+                case '=':
+                case 'Enter':
+                    this.calculate();
+                    break;
+    
+                case ',':
+                case '.':
+                    this.addComma();
+                    break;
+    
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':   
+                case '8':
+                case '9':
+    
+                    this.addOperation(parseInt(e.key));
+                    
+                        break;
+
+                }
+            
+           
+            
         });
+        
 
     }
 
